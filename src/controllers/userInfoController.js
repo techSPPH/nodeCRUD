@@ -36,6 +36,8 @@ exports.login = (req, res, next) => {
 
 const upload = multer({ storage: storage }).single('image');
 
+
+//create
 exports.create = (req, res) => {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
@@ -52,12 +54,15 @@ exports.create = (req, res) => {
   });
 };
 
+
+//read
 exports.findAll = (req, res) => {
   UserInfo.findAll()
     .then(userInfos => res.json(userInfos))
     .catch(error => res.status(500).json({ error: error.message }));
 };
 
+//search
 exports.findOne = (req, res) => {
   const { id } = req.params;
   UserInfo.findByPk(id)
@@ -71,6 +76,7 @@ exports.findOne = (req, res) => {
     .catch(error => res.status(500).json({ error: error.message }));
 };
 
+//update
 exports.update = (req, res) => {
   const { id } = req.params;
   const { Fname, Lname, age, email, password } = req.body;
@@ -90,6 +96,7 @@ exports.update = (req, res) => {
     .catch(error => res.status(500).json({ error: error.message }));
 };
 
+//delete
 exports.delete = (req, res) => {
   const { id } = req.params;
   UserInfo.destroy({ where: { id } })

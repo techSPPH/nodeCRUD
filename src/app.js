@@ -5,7 +5,7 @@ const db = require('./models');
 const userInfoRoutes = require('./routes/userInfoRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 // Database connection
 db.sequelize.sync({ force: true })
@@ -17,6 +17,9 @@ db.sequelize.sync({ force: true })
   });
 
 app.use(bodyParser.json());
+
+// Serve uploaded images statically
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/userinfo', userInfoRoutes);

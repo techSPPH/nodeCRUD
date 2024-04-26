@@ -20,6 +20,10 @@ module.exports = (sequelize, Sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.BLOB, 
+      allowNull: true, 
+    },
   });
   return UserInfo;
 };

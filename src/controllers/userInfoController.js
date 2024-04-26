@@ -1,13 +1,37 @@
 // src/controllers/userInfoController.js
 const db = require('../models');
+const multer = require('multer');
 
 const UserInfo = db.userInfo;
 
+// Multer 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './img'); //upload directory
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage }).single('image');
+
 exports.create = (req, res) => {
-  const { Fname, Lname, age } = req.body;
-  UserInfo.create({ Fname, Lname, age })
-    .then(userInfo => res.json(userInfo))
-    .catch(error => res.status(500).json({ error: error.message }));
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ error: 'File upload error' });
+    } else if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Image uploaded successfully, now create user info
+    const { Fname, Lname, age } = req.body;
+    const imagePath = req.file ? req.file.filename : null;
+
+    UserInfo.create({ Fname, Lname, age, image: imagePath })
+      .then(userInfo => res.json(userInfo))
+      .catch(error => res.status(500).json({ error: error.message }));
+  });
 };
 
 exports.findAll = (req, res) => {
